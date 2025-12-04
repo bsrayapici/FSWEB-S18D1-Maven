@@ -14,7 +14,7 @@ public interface KitapRepository extends JpaRepository<Kitap, Long> {
     List<Kitap> findBooks();
 
 
-    String QUESTION_10 = "SELECT AVG(puan) FROM kitap";
+    String QUESTION_10 = "SELECT ROUND(AVG(puan),2) FROM kitap";
     @Query(value = QUESTION_10, nativeQuery = true)
     Double findAvgPointOfBooks();
 

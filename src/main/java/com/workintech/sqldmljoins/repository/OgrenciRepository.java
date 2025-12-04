@@ -10,7 +10,7 @@ public interface OgrenciRepository extends JpaRepository<Ogrenci, Long> {
 
 
     //Kitap alan öğrencilerin öğrenci bilgilerini listeleyin..
-    String QUESTION_2 = "SELECT DISTINCT o.* " +
+    String QUESTION_2 = "SELECT o.* " +
             "FROM ogrenci AS o " +
             "INNER JOIN islem AS i " +
             "ON o.ogrno = i.ogrno";
@@ -48,29 +48,29 @@ public interface OgrenciRepository extends JpaRepository<Ogrenci, Long> {
 
     //--İsme göre öğrenci sayılarının adedini bulunuz.
     //--Ali: 2, Mehmet: 3
-    String QUESTION_7 = "SELECT ad, COUNT(ad) AS isim_adedi " +
+    String QUESTION_7 = "SELECT ad, COUNT(ad) AS count " +
             "FROM ogrenci " +
             "GROUP BY ad";
     @Query(value = QUESTION_7, nativeQuery = true)
     List<StudentNameCount> findStudentNameCount();
 
 
-    String QUESTION_8 =
-            "SELECT sinif, COUNT(ogrno) AS count " +
-                    "FROM ogrenci " +
-                    "GROUP BY sinif " +
-                    "ORDER BY " +
-                    "CAST(SUBSTRING(sinif, 1, LENGTH(sinif)-1) AS INTEGER), " +
-                    "SUBSTRING(sinif, LENGTH(sinif), 1)";    // Harf kısmı sırala
+    String QUESTION_8 = "SELECT sinif, COUNT(ogrno) AS count " +
+            "FROM ogrenci " +
+            "GROUP BY sinif " +
+            "ORDER BY sinif DESC"; // ORDER BY eklenmeli
     @Query(value = QUESTION_8, nativeQuery = true)
     List<StudentClassCount> findStudentClassCount();
 
     String QUESTION_9 =
-            "SELECT o.ad, o.soyad, COUNT(i.kitapno) AS okunan_kitap_sayisi " +
-                    "FROM ogrenci AS o " +
-                    "LEFT JOIN islem AS i ON o.ogrno = i.ogrno " +
-                    "GROUP BY o.ogrno, o.ad, o.soyad " +
-                    "ORDER BY okunan_kitap_sayisi DESC";
+            "SELECT " +
+                    "        o.ad," +
+                    "        o.soyad," +
+                    "        COUNT(i.kitapno) AS count" +
+                    "    FROM ogrenci AS o" +
+                    "    LEFT JOIN islem AS i ON o.ogrno = i.ogrno" +
+                    "    GROUP BY o.ad, o.soyad" +
+                    "    HAVING COUNT(i.kitapno) > 0";
     @Query(value = QUESTION_9, nativeQuery = true)
     List<StudentNameSurnameCount> findStudentNameSurnameCount();
 }
